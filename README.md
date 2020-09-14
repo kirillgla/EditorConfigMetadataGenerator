@@ -1,17 +1,17 @@
-#EditorConfig metadata generator
+# EditorConfig metadata generator
 
 This project can be used to generate EditorConfig metadata for IntelliJ.
 
-###The problem:
+### The problem:
 Microsoft released [a new set of EditorConfig rules](https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-formatting-conventions).
 For IntelliJ-based IDEs to support them, metadata describing those keys and values needs to be provided.
 Due to sheer numbers of the new rules, creating the metadata manually is tiresome.
 
-###The solution:
+### The solution:
 Download the page and use regular expressions to extract rules from it.
 Then generate the metadata based on that.
 
-###Usage:
+### Usage:
 1. Open the [page with rule descriptions](https://docs.microsoft.com/en-us/visualstudio/ide/editorconfig-formatting-conventions);
 2. Right-click it and select `View page source`;
 3. Copy all the code;
