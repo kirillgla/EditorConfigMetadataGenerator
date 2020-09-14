@@ -24,12 +24,12 @@ namespace EditorConfigMetadataGenerator
             };
         }
 
-        public static string GetDataLocation(string[] args)
+        public static string GetDataLocation(string[] args, int locationIndex = 1)
         {
-            if (args.Length >= 2)
+            if (args.Length > locationIndex)
             {
                 Console.WriteLine($"Using data location from argument ({args[0]})");
-                return args[1];
+                return args[locationIndex];
             }
 
             Console.WriteLine($"No data location passed. Using default data location {DefaultDataLocation})");

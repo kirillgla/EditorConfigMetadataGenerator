@@ -33,7 +33,8 @@ namespace EditorConfigMetadataGenerator
 </tbody>
 </table>");
 
-        public static readonly Regex LanguageRuleRegex = new Regex(@"<h4 id=""(\w|_)+"">(?<ruleName>(\w|_)+)</h4>
+        public static readonly Regex LanguageRuleRegex = new Regex(@"<h4 id=""(\w|_)+"">(?<ruleName>(\w|_)+)</h4>(
+<p>(?<ruleDocumentation>.+)</p>)?
 <table>
 <thead>
 <tr>
@@ -49,11 +50,11 @@ namespace EditorConfigMetadataGenerator
 <tr>
 <td><strong>Rule ID</strong></td>
 <td>.+</td>
-</tr>
+</tr>(
 <tr>
 <td><strong>Applicable languages</strong></td>
 <td>.*</td>
-</tr>
+</tr>)?
 <tr>
 <td><strong>Values</strong></td>
 <td>(?<ruleValues>.+)</td>
@@ -61,7 +62,11 @@ namespace EditorConfigMetadataGenerator
 <tr>
 <td><strong>Visual Studio default</strong></td>
 <td><code>.+</code></td>
-</tr>
+</tr>(
+<tr>
+<td><strong>Introduced version</strong></td>
+<td>.+</td>
+</tr>)?
 </tbody>
 </table>");
     }
