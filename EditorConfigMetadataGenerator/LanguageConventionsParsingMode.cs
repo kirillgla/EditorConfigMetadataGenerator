@@ -1,14 +1,26 @@
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace EditorConfigMetadataGenerator
 {
     public sealed class LanguageConventionsParsingMode : ParsingMode
     {
+        private static IEnumerable<string> IgnoredRules { get; } = new List<string>
+        {
+            "csharp_preferred_modifier_order",
+            "visual_basic_preferred_modifier_order",
+            "visual_basic_style_unused_value_expression_statement_preference",
+            "visual_basic_style_unused_value_assignment_preference"
+        };
+
         private bool HasDefinedSeverity { get; set; }
         public override Regex RuleRegex => RuleRegexes.LanguageRuleRegex;
         protected override string BaseValueOffset => "          ";
-        public override bool ShouldSkipRule(string optionName) => false;
+
+        // Different from others, easier to handle manually
+        public override bool ShouldSkipRule(string optionName) => IgnoredRules.Any(optionName.Equals);
 
         public override void WriteValues(Match optionMatch, StreamWriter writer)
         {

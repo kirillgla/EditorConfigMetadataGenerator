@@ -8,10 +8,10 @@ namespace EditorConfigMetadataGenerator
         private static readonly Regex TagRegex = new Regex("</?[^<>]+>");
 
         protected static readonly Regex RuleFirstValueRegex =
-            new Regex(@"^<code>(?<valueName>(\w)+)</code> -(?<documentation>([^<]|<[^b]|<b[^r]|<br[^>])*)<br><br>");
+            new Regex(@"^<code>(?<valueName>(\w)+)</code>( -)?(?<documentation>([^<]|<[^b]|<b[^r]|<br[^>])*)(<br><br>)?");
 
         protected static readonly Regex RuleValueRegex =
-            new Regex(@"<br><br><code>(?<valueName>(\w)+)</code> -(?<documentation>([^<]|<[^b]|<b[^r]|<br[^>])*)");
+            new Regex(@"<br><br><code>(?<valueName>(\w)+)</code>( -)?(?<documentation>([^<]|<[^b]|<b[^r]|<br[^>])*)");
 
         public static string EscapeDocumentation(string documentation) => TagRegex.Replace(documentation, "");
         public abstract Regex RuleRegex { get; }
