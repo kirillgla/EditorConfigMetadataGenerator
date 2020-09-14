@@ -58,6 +58,12 @@ namespace EditorConfigMetadataGenerator
             int currentIndex = 0;
             foreach (Match optionMatch in optionsMatches)
             {
+                // csharp_new_line_before_open_brace is already described in roslyn.json
+                if (optionMatch.Groups["ruleName"].Value.Equals("csharp_new_line_before_open_brace"))
+                {
+                    currentIndex += 1;
+                    continue;
+                }
                 writer.WriteLine("  {");
                 writer.WriteLine("    \"type\": \"option\",");
                 WriteKey(writer, optionMatch);
