@@ -1,43 +1,12 @@
 ﻿using System;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace EditorConfigMetadataGenerator
 {
     internal static class Program
     {
-        private const string DefaultDataLocation = @"C:\w\EditorConfigMetadataGenerator\EditorConfigMetadataGenerator";
         private static readonly Regex TagRegex = new Regex("</?[^<>]+>");
-
-        private static readonly Regex RuleRegex = new Regex(@"<h[45] id=""(\w|_)+"">(?<ruleName>(\w|_)+)</h[45]>(
-<p>(?<ruleDocumentation>.+)</p>)?
-<table>
-<thead>
-<tr>
-<th>Property</th>
-<th>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Rule name</strong></td>
-<td>(\w|_)+</td>
-</tr>
-<tr>
-<td><strong>Applicable languages</strong></td>
-<td>.+</td>
-</tr>(
-<tr>
-<td><strong>Introduced version</strong></td>
-<td>.+</td>
-</tr>)?
-<tr>
-<td><strong>Values</strong></td>
-<td>(?<ruleValues>.+)</td>
-</tr>
-</tbody>
-</table>");
 
         private static readonly Regex RuleFirstValueRegex =
             new Regex(@"^<code>(?<valueName>(\w)+)</code> -(?<documentation>([^<]|<[^b]|<b[^r]|<br[^>])*)<br><br>");
@@ -47,19 +16,22 @@ namespace EditorConfigMetadataGenerator
 
         static void Main(string[] args)
         {
-            string dataLocation = GetDataLocation(args);
+            var ruleRegex = CommandLineUtils.GetRuleRegex(args);
+            if (ruleRegex == null) return;
+            string dataLocation = CommandLineUtils.GetDataLocation(args);
+
             string text = File.ReadAllText($@"{dataLocation}\Data.html");
             using var writer = new StreamWriter($@"{dataLocation}\Output.json");
-            var optionsMatches = RuleRegex.Matches(text);
+            var optionsMatches = ruleRegex.Matches(text);
 
             Console.WriteLine($"Total rules found: {optionsMatches.Count}");
 
             writer.WriteLine("[");
             int currentIndex = 0;
-            foreach (Match optionMatch in optionsMatches)
+            foreach (Match? optionMatch in optionsMatches)
             {
                 // csharp_new_line_before_open_brace is already described in roslyn.json
-                if (optionMatch.Groups["ruleName"].Value.Equals("csharp_new_line_before_open_brace"))
+                if (optionMatch!.Groups["ruleName"].Value.Equals("csharp_new_line_before_open_brace"))
                 {
                     currentIndex += 1;
                     continue;
@@ -85,25 +57,13 @@ namespace EditorConfigMetadataGenerator
         {
             string rawRuleValues = optionMatch.Groups["ruleValues"].Value;
             WriteValue(writer, RuleFirstValueRegex.Match(rawRuleValues));
-            foreach (Match valueMatch in RuleValueRegex.Matches(rawRuleValues))
+            foreach (Match? valueMatch in RuleValueRegex.Matches(rawRuleValues))
             {
                 writer.WriteLine(",");
-                WriteValue(writer, valueMatch);
+                WriteValue(writer, valueMatch!);
             }
 
             writer.WriteLine();
-        }
-
-        private static string GetDataLocation(string[] args)
-        {
-            if (args.Any())
-            {
-                Console.WriteLine($"Using data location from argument ({args[0]})");
-                return args[0];
-            }
-
-            Console.WriteLine($"No data location passed. Using default data location ({DefaultDataLocation})");
-            return DefaultDataLocation;
         }
 
         private static void WriteValue(StreamWriter writer, Match valueMatch)
