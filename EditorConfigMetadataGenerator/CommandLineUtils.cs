@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace EditorConfigMetadataGenerator
 {
@@ -8,7 +7,7 @@ namespace EditorConfigMetadataGenerator
     {
         private const string DefaultDataLocation = @"C:\w\EditorConfigMetadataGenerator\EditorConfigMetadataGenerator";
 
-        public static Regex? GetRuleRegex(string[] args)
+        public static ParsingMode? GetParsingMode(string[] args)
         {
             if (!args.Any())
             {
@@ -18,8 +17,8 @@ namespace EditorConfigMetadataGenerator
 
             return args[0] switch
             {
-                "formatting" => RuleRegexes.FormattingRuleRegex,
-                "language" => RuleRegexes.LanguageRuleRegex,
+                "formatting" => new FormattingConventionsParsingMode(),
+                "language" => new LanguageConventionsParsingMode(),
                 _ => null
             };
         }
