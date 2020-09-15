@@ -83,7 +83,9 @@ namespace EditorConfigMetadataGenerator
             }
             else
             {
-                writer.WriteLine("\"severity\"");
+                writer.WriteLine(@"{
+        ""type"": ""severity""
+      }");
             }
         }
     }
