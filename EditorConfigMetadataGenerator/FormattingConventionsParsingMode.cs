@@ -8,8 +8,9 @@ namespace EditorConfigMetadataGenerator
         public override Regex RuleRegex => RuleRegexes.FormattingRuleRegex;
 
         // csharp_new_line_before_open_brace is quite complex and is better dealt with manually
+        // csharp_space_between_parentheses has a note that its value can be anything
         public override bool ShouldSkipRule(string optionName) =>
-            optionName.Equals("csharp_new_line_before_open_brace");
+            optionName.Equals("csharp_new_line_before_open_brace") || optionName.Equals("csharp_space_between_parentheses") || optionName.Equals("csharp_space_around_binary_operators");
 
         protected override string BaseValueOffset => "        ";
 
